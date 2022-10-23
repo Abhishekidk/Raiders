@@ -1,12 +1,14 @@
 import random
 import json
 import pickle
-import numpy as np
+import numpy
 
 import nltk
+
 from nltk.stem import WordNetLemmatizer
 
-from tensorflow.keras.model import load_model
+from tensorflow import keras
+from keras.models import load_model 
 
 lemmatizer = WordNetLemmatizer()
 intents = json.loads(open("intents.json").read())
@@ -42,3 +44,20 @@ def predict_class(sentence):
         return_list.append({"intent": classes[r[0]],"probability": str(r[1])})
     return return_list
 
+
+def get_response(intents_list, intents_json):
+    tag=intents_list[0]['intent']
+    list_of_intents=intents_json['intents']
+    for i in list_of_intents:
+        if i['tag']==tag:
+            result=random.choice(i['responses'])
+            break
+        return result
+
+print("GO! Bot is running")
+
+while True:
+    message=input("")
+    ints=predict_class(message)
+    res=get_response(ints, intents)
+    print(res)
